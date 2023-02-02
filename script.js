@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const PROFILE_BASE_URL = "http://image.tmdb.org/t/p/w185";
@@ -6,7 +6,7 @@ const BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w780";
 const CONTAINER = document.querySelector(".container");
 
 // Don't touch this function please
-const autorun = async () => {
+const autoRun = async () => {
   const movies = await fetchMovies();
   renderMovies(movies.results);
 };
@@ -78,4 +78,4 @@ const renderMovie = (movie) => {
     </div>`;
 };
 
-document.addEventListener("DOMContentLoaded", autorun);
+document.addEventListener("DOMContentLoaded", autoRun);
