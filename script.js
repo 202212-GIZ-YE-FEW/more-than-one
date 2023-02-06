@@ -107,9 +107,13 @@ const renderMovie = (movie) => {
           <p id="movie-production">
           <b>Production Companies:</b> 
           ${movie.production_companies
-            .map((productionCompany) => productionCompany.name + `<img src="${
-              backdropBaseUrl + productionCompany.logo_path
-            }" width="50">`)
+            .map(
+              (productionCompany) =>
+                productionCompany.name +
+                `<img src="${
+                  backdropBaseUrl + productionCompany.logo_path
+                }" width="50">`
+            )
             .join(", ")}
         </p>
         
@@ -132,7 +136,7 @@ const renderMovie = (movie) => {
     `;
   // console.log(movie);
   fetchActors(movie.id);
-  fetchDirector( movie.id);
+  fetchDirector(movie.id);
   fetchTrailer(movie.id);
   fetchRelatedMovies(movie.id);
 };
@@ -144,14 +148,15 @@ const fetchActors = (movieId) => {
   fetch(ACTORS_URL)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      console.log(data);
       if (Array.isArray(data.cast)) {
-
-         const actors = data.cast.slice(0,5).map((actor) => {
-console.log(actor)
+        const actors = data.cast.slice(0, 5).map((actor) => {
+          console.log(actor);
           return `
             <li class=" list-unstyled media my-3">
-              <img src="${PROFILE_BASE_URL+ actor.profile_path}" alt="" class="mr-3" width="120">
+              <img src="${
+                PROFILE_BASE_URL + actor.profile_path
+              }" alt="" class="mr-3" width="120">
               <div class="media-body">
                 <h5 class="mt-0 mb-1">${actor.name}</h5>
                 <p>Character: ${actor.character}</p>
@@ -159,7 +164,7 @@ console.log(actor)
               </div>
             </li>
           `;
-       });
+        });
         document.querySelector("#actors").innerHTML = actors.join("");
       } else {
         console.error("The 'data.cast' property is not an array");
@@ -170,7 +175,6 @@ console.log(actor)
     });
 };
 
-
 // Renders the Director job in the DOM
 
 const fetchDirector = (movieId) => {
@@ -178,7 +182,7 @@ const fetchDirector = (movieId) => {
   fetch(CREDITS_URL)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      console.log(data);
       if (Array.isArray(data.crew)) {
         const director = data.crew.find((member) => member.job === "Director");
         if (director) {
@@ -202,11 +206,10 @@ const fetchDirector = (movieId) => {
 // Renders the Trailer viedio in the DOM
 
 const fetchTrailer = (movieId) => {
-
   const TRAILER_URL = constructUrl(`movie/${movieId}/videos`);
   fetch(TRAILER_URL)
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       if (data.results.length) {
         const trailerKey = data.results[0].key;
         const trailerEmbedUrl = `https://www.youtube.com/embed/${trailerKey}`;
@@ -225,7 +228,7 @@ const fetchTrailer = (movieId) => {
         console.error("No trailer found");
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
     });
 };
@@ -237,19 +240,27 @@ const fetchRelatedMovies = (movieId) => {
     .then((data) => {
       if (Array.isArray(data.results)) {
         const relatedMovies = data.results.slice(0, 5).map((movie) => {
-          return `
-            <div class="col-sm-6 col-md-4 col-lg-3 my-3">
-              <div class="card">
-                <img src="${POSTER_BASE_URL+ movie.poster_path}" alt="" class="card-img-top">
-                <div class="card-body">
-                  <h5 class="card-title">${movie.title}</h5>
-
-                </div>
-              </div>
-            </div>
-          `;
+          const movieDiv = document.createElement("div");
+          // Set the inner HTML of the div to display the movie's poster and title
+          movieDiv.innerHTML = `<div class="col-sm-6 col-md-4 col-lg-3 my-3">
+    <div class="card">
+    <img src="${BACKDROP_BASE_URL + movie.poster_path}" alt="${
+            movie.title
+          } poster" class="card-img-top">  
+    <div class="card-body">
+    <h3 class="card-title">${movie.title}</h3>
+    </div>
+               </div>
+            </div>`;
+          // Add a click event listener to the div to display the movie's details when clicked
+          movieDiv.addEventListener("click", () => {
+            movieDetails(movie);
+          });
+          // Append the movie div to the container element
+          CONTAINER.appendChild(movieDiv);
         });
-        document.querySelector("#related-movies").innerHTML = relatedMovies.join("");
+        document.querySelector("#related-movies").innerHTML =
+          relatedMovies.join("");
       } else {
         console.error("The 'data.results' property is not an array");
       }
