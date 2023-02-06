@@ -132,6 +132,7 @@ const renderMovie = (movie) => {
     `;
   // console.log(movie);
   fetchActors(movie.id);
+  fetchDirector( movie.id);
 };
 
 // Renders the Actor details in the DOM
@@ -166,6 +167,39 @@ console.log(actor)
       console.error(error);
     });
 };
+
+
+// Renders the Director details in the DOM
+
+const fetchDirector = (movieId) => {
+  const CREDITS_URL = constructUrl(`movie/${movieId}/credits`);
+  fetch(CREDITS_URL)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data)
+      if (Array.isArray(data.crew)) {
+        const director = data.crew.find((member) => member.job === "Director");
+        if (director) {
+          document.querySelector("#movie-director").innerHTML = `
+            <p class="media my-3">
+              Director: ${director.name}
+            </p>
+          `;
+        } else {
+          console.error("No director found for this movie");
+        }
+      } else {
+        console.error("The 'data.crew' property is not an array");
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+
+
+
 
 // Add an event listener to the DOM to call the autoRun function when the DOM is loaded
 document.addEventListener("DOMContentLoaded", autoRun);
