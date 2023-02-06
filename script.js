@@ -88,24 +88,6 @@ const renderMovies = (movies) => {
     });
 };
 
-// const renderMovies_s = (movies) => {
-//     // Loop through each movie in the list
-//     movies.map((movie) => {
-//         // Create a div for the movie
-//         const movieDiv = document.createElement("div");
-//         // Set the inner HTML of the div to display the movie's poster and title
-//         movieDiv.innerHTML = `<img src="${
-//             BACKDROP_BASE_URL + movie.backdrop_path
-//         }" alt="${movie.title} poster"> <h3>${movie.title}</h3>`;
-//         // Add a click event listener to the div to display the movie's details when clicked
-//         movieDiv.addEventListener("click", () => {
-//             movieDetails(movie);
-//         });
-//         // Append the movie div to the container element
-//         CONTAINER.appendChild(movieDiv);
-//     });
-// };
-
 // * You'll need to play with this function in order to add features and enhance the style.
 /**
  * Renders the movie details in the DOM
@@ -159,6 +141,7 @@ const renderMovie = (movie) => {
           
           
           }<b>vote_average:
+          <p id="movie-vote_count"><b>vote_count:</b> ${movie.vote_count} </p> 
           <p id="movie-genres">
   <b>Genres:</b> 
   ${movie.genres.map((genre) => genre.name).join(", ")}
