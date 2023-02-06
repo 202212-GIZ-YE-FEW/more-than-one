@@ -133,6 +133,7 @@ const renderMovie = (movie) => {
   // console.log(movie);
   fetchActors(movie.id);
   fetchDirector( movie.id);
+  fetchTrailer(movie.id);
 };
 
 // Renders the Actor details in the DOM
@@ -169,7 +170,7 @@ console.log(actor)
 };
 
 
-// Renders the Director details in the DOM
+// Renders the Director job in the DOM
 
 const fetchDirector = (movieId) => {
   const CREDITS_URL = constructUrl(`movie/${movieId}/credits`);
@@ -197,7 +198,36 @@ const fetchDirector = (movieId) => {
     });
 };
 
+// Renders the Trailer viedio in the DOM
 
+const fetchTrailer = (movieId) => {
+
+  const TRAILER_URL = constructUrl(`movie/${movieId}/videos`);
+  fetch(TRAILER_URL)
+    .then(response => response.json())
+    .then(data => {
+      if (data.results.length) {
+        const trailerKey = data.results[0].key;
+        const trailerEmbedUrl = `https://www.youtube.com/embed/${trailerKey}`;
+        const trailerContainer = document.querySelector("#trailer-container");
+        trailerContainer.innerHTML = `
+          <iframe
+            width="560"
+            height="315"
+            src="${trailerEmbedUrl}"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        `;
+      } else {
+        console.error("No trailer found");
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });
+};
 
 
 
