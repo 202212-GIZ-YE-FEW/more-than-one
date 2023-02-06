@@ -134,6 +134,7 @@ const renderMovie = (movie) => {
   fetchActors(movie.id);
   fetchDirector( movie.id);
   fetchTrailer(movie.id);
+  fetchRelatedMovies(movie.id);
 };
 
 // Renders the Actor details in the DOM
