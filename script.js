@@ -114,7 +114,7 @@ const renderMovie = (movie) => {
         </p>
         
        
-          <p id="movie-director">${movie.director}<b>Director:
+          <p id="movie-director"><b>Director:
           <p id="vote_average">${movie.vote_average}<b>vote_average:
           <p id="movie-genres">
   <b>Genres:</b> 
@@ -130,10 +130,42 @@ const renderMovie = (movie) => {
       <div id="related-movies"> 
       </div>
     `;
-  console.log(movie);
+  // console.log(movie);
+  fetchActors(movie.id);
 };
 
-// };
+// Renders the Actor details in the DOM
+
+const fetchActors = (movieId) => {
+  const ACTORS_URL = constructUrl(`movie/${movieId}/credits`);
+  fetch(ACTORS_URL)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data)
+      if (Array.isArray(data.cast)) {
+
+         const actors = data.cast.slice(0,5).map((actor) => {
+console.log(actor)
+          return `
+            <li class=" list-unstyled media my-3">
+              <img src="${PROFILE_BASE_URL+ actor.profile_path}" alt="" class="mr-3" width="120">
+              <div class="media-body">
+                <h5 class="mt-0 mb-1">${actor.name}</h5>
+                <p>Character: ${actor.character}</p>
+               
+              </div>
+            </li>
+          `;
+       });
+        document.querySelector("#actors").innerHTML = actors.join("");
+      } else {
+        console.error("The 'data.cast' property is not an array");
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
 
 // Add an event listener to the DOM to call the autoRun function when the DOM is loaded
 document.addEventListener("DOMContentLoaded", autoRun);
