@@ -228,8 +228,35 @@ const fetchTrailer = (movieId) => {
       console.error(error);
     });
 };
+//Renders the Get a list of similar movies. This is not the same as the "Recommendation" system you see on the website. in the DOM
+const fetchRelatedMovies = (movieId) => {
+  const RELATED_MOVIES_URL = constructUrl(`movie/${movieId}/similar`);
+  fetch(RELATED_MOVIES_URL)
+    .then((response) => response.json())
+    .then((data) => {
+      if (Array.isArray(data.results)) {
+        const relatedMovies = data.results.slice(0, 5).map((movie) => {
+          return `
+            <div class="col-sm-6 col-md-4 col-lg-3 my-3">
+              <div class="card">
+                <img src="${POSTER_BASE_URL+ movie.poster_path}" alt="" class="card-img-top">
+                <div class="card-body">
+                  <h5 class="card-title">${movie.title}</h5>
 
-
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        document.querySelector("#related-movies").innerHTML = relatedMovies.join("");
+      } else {
+        console.error("The 'data.results' property is not an array");
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
 
 // Add an event listener to the DOM to call the autoRun function when the DOM is loaded
 document.addEventListener("DOMContentLoaded", autoRun);
