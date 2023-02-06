@@ -70,13 +70,10 @@ const renderMovies = (movies) => {
     // Add a click event listener to the div to display the movie's details when clicked
     movieDiv.addEventListener("click", () => {
       movieDetails(movie);
-
     });
     // Append the movie div to the container element
     CONTAINER.appendChild(movieDiv);
-   
   });
- 
 };
 
 // * You'll need to play with this function in order to add features and enhance the style.
@@ -84,26 +81,46 @@ const renderMovies = (movies) => {
  * Renders the movie details in the DOM
  * @param {Object} movie - The movie object that contains the movie details
  */
-// 
-    
-  const renderMovie = (movie) => {
+//
 
-    const backdropBaseUrl = "https://image.tmdb.org/t/p/w1280";
-  
-    CONTAINER.innerHTML = `
+const renderMovie = (movie) => {
+  const backdropBaseUrl = "https://image.tmdb.org/t/p/w1280";
+
+  CONTAINER.innerHTML = `
       <div class="row"> 
         <div class="col-md-4"> 
-          <img id="movie-backdrop" src="${backdropBaseUrl + movie.backdrop_path}"> 
+          <img id="movie-backdrop" src="${
+            backdropBaseUrl + movie.backdrop_path
+          }"> 
         </div> 
         <div class="col-md-8"> 
           <h2 id="movie-title">${movie.title}</h2>
-          <p id="movie-release-date"><b>Release Date:</b> ${movie.release_date}</p> 
+          <p id="movie-release-date"><b>Release Date:</b> ${
+            movie.release_date
+          }</p> 
           <p id="movie-runtime"><b>Runtime:</b> ${movie.runtime} Minutes</p> 
           <h3>Overview:</h3> 
           <p id="movie-overview">${movie.overview}</p> 
-          <p id="movie-language"><b>Language:</b> ${movie.original_language}</p> 
-          <p id="movie-production"><b>Production Company:</b> ${movie.production_companies[0].name}</p> 
+          <p id="movie-language"><b>Language:</b> ${
+            movie.original_language
+          }</p> 
+          <p id="movie-production">
+          <b>Production Companies:</b> 
+          ${movie.production_companies
+            .map((productionCompany) => productionCompany.name + `<img src="${
+              backdropBaseUrl + productionCompany.logo_path
+            }" width="50">`)
+            .join(", ")}
+        </p>
+        
+       
           <p id="movie-director">${movie.director}<b>Director:
+          <p id="vote_average">${movie.vote_average}<b>vote_average:
+          <p id="movie-genres">
+  <b>Genres:</b> 
+  ${movie.genres.map((genre) => genre.name).join(", ")}
+</p>
+<b>vote_average:
         </div>
       </div> 
       <h3>Actors:</h3> 
@@ -113,13 +130,8 @@ const renderMovies = (movies) => {
       <div id="related-movies"> 
       </div>
     `;
-    
-  };
-  
-  
-  
-    
-    
+  console.log(movie);
+};
 
 // };
 
