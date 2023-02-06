@@ -4,6 +4,7 @@
 const TMDB_BASE_URL = "https://api.themoviedb.org/3"; // API base URL
 const PROFILE_BASE_URL = "http://image.tmdb.org/t/p/w185"; // Actor/Actress profile image URL
 const BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w780"; // Movie backdrop image URL
+const POSTER_BASE_URL = "http://image.tmdb.org/t/p/w500/";
 const CONTAINER = document.querySelector(".container"); // Container for displaying movie data
 
 // ! Don't touch this function please
@@ -69,10 +70,13 @@ const renderMovies = (movies) => {
     // Add a click event listener to the div to display the movie's details when clicked
     movieDiv.addEventListener("click", () => {
       movieDetails(movie);
+
     });
     // Append the movie div to the container element
     CONTAINER.appendChild(movieDiv);
+   
   });
+ 
 };
 
 // * You'll need to play with this function in order to add features and enhance the style.
@@ -80,29 +84,44 @@ const renderMovies = (movies) => {
  * Renders the movie details in the DOM
  * @param {Object} movie - The movie object that contains the movie details
  */
-const renderMovie = (movie) => {
-  // Set the inner HTML of the container element to display the movie's details
-  CONTAINER.innerHTML = `
-    <div class="row">
-        <div class="col-md-4">
-            <img id="movie-backdrop" src=${
-              BACKDROP_BASE_URL + movie.backdrop_path
-            }>
+// 
+    
+  const renderMovie = (movie) => {
+
+    const backdropBaseUrl = "https://image.tmdb.org/t/p/w1280";
+  
+    CONTAINER.innerHTML = `
+      <div class="row"> 
+        <div class="col-md-4"> 
+          <img id="movie-backdrop" src="${backdropBaseUrl + movie.backdrop_path}"> 
+        </div> 
+        <div class="col-md-8"> 
+          <h2 id="movie-title">${movie.title}</h2>
+          <p id="movie-release-date"><b>Release Date:</b> ${movie.release_date}</p> 
+          <p id="movie-runtime"><b>Runtime:</b> ${movie.runtime} Minutes</p> 
+          <h3>Overview:</h3> 
+          <p id="movie-overview">${movie.overview}</p> 
+          <p id="movie-language"><b>Language:</b> ${movie.original_language}</p> 
+          <p id="movie-production"><b>Production Company:</b> ${movie.production_companies[0].name}</p> 
+          <p id="movie-director">${movie.director}<b>Director:
         </div>
-        <div class="col-md-8">
-            <h2 id="movie-title">${movie.title}</h2>
-            <p id="movie-release-date"><b>Release Date:</b> ${
-              movie.release_date
-            }</p>
-            <p id="movie-runtime"><b>Runtime:</b> ${movie.runtime} Minutes</p>
-            <h3>Overview:</h3>
-            <p id="movie-overview">${movie.overview}</p>
-        </div>
-        </div>
-            <h3>Actors:</h3>
-            <ul id="actors" class="list-unstyled"></ul>
-    </div>`;
-};
+      </div> 
+      <h3>Actors:</h3> 
+      <ul id="actors" class="list-unstyled"></ul> 
+      <div id="trailer-container"> 
+      </div>
+      <div id="related-movies"> 
+      </div>
+    `;
+    
+  };
+  
+  
+  
+    
+    
+
+// };
 
 // Add an event listener to the DOM to call the autoRun function when the DOM is loaded
 document.addEventListener("DOMContentLoaded", autoRun);
