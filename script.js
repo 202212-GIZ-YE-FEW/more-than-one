@@ -119,7 +119,16 @@ const renderMovie = (movie) => {
         
        
           <p id="movie-director"><b>Director:
-          <p id="vote_average">${movie.vote_average}<b>vote_average:
+          <p id="vote_average" style="color: ${
+            movie.vote_average > 7
+              ? 'yellow'
+              : movie.vote_average > 5
+              ? 'orange'
+              : 'red'
+          };">${movie.vote_average}</p>
+          
+          
+          }<b>vote_average:
           <p id="movie-genres">
   <b>Genres:</b> 
   ${movie.genres.map((genre) => genre.name).join(", ")}
