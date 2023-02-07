@@ -157,20 +157,35 @@ const renderMovie = (movie) => {
       </div>
     `;
   // console.log(movie);
-  fetchActors(movie.id);
-  fetchDirector(movie.id);
-  fetchTrailer(movie.id);
-  fetchRelatedMovies(movie.id);
+  actorsRun(movie.id);
+  directorRun (movie.id);
+  trailerRun(movie.id);
+  RelatedMoviesRun(movie.id);
 };
 
 // Renders the Actor details in the DOM
-// 
-const fetchActors = (movieId) => {
-  const ACTORS_URL = constructUrl(`movie/${movieId}/credits`);
-  fetch(ACTORS_URL)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
+//--------------------------------------------------------------------------------------
+
+
+const fetchActors = async (movieId) => {
+  // Construct the URL for the API endpoint
+  const url = constructUrl(`movie/${movieId}/credits`);
+  // Fetch the response from the API
+  const res = await fetch(url);
+  // Return the JSON data from the response
+  return res.json();
+};
+
+const actorsRun = async (movieId) => {
+  
+  const actors = await fetchActors(movieId)
+    
+   renderActores(actors)
+  
+  };
+
+const  renderActores = (data) => {
+  
       if (Array.isArray(data.cast)) {
         const actors = data.cast.slice(0, 5).map((actor) => {
           console.log(actor);
@@ -185,25 +200,42 @@ const fetchActors = (movieId) => {
                
               </div>
             </li>
+            
           `;
+             
         });
-        document.querySelector("#actors").innerHTML = actors.join("");
+      
+        const actorsList = document.querySelector("#actors");
+      
+        actorsList.innerHTML = actors.join("");
+        
       } else {
         console.error("The 'data.cast' property is not an array");
       }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+    };
+
+//--------------------------------------------------------------------------------------
+// Renders the Director job in the DOM
+const fetchDirector = async (movieId) => {
+  // Construct the URL for the API endpoint
+  const url = constructUrl(`movie/${movieId}/credits`);
+  // Fetch the response from the API
+  const res = await fetch(url);
+  // Return the JSON data from the response
+  return res.json();
 };
 
-// Renders the Director job in the DOM
+const directorRun = async (movieId) => {
+  
+  const director = await fetchActors(movieId)
+    
+  renderDirector(director)
+  
+  };
 
-const fetchDirector = (movieId) => {
-  const CREDITS_URL = constructUrl(`movie/${movieId}/credits`);
-  fetch(CREDITS_URL)
-    .then((response) => response.json())
-    .then((data) => {
+
+const renderDirector = (data) => {
+  
       console.log(data);
       if (Array.isArray(data.crew)) {
         const director = data.crew.find((member) => member.job === "Director");
@@ -219,19 +251,30 @@ const fetchDirector = (movieId) => {
       } else {
         console.error("The 'data.crew' property is not an array");
       }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
+    };
+//--------------------------------------------------------------------------------------
 // Renders the Trailer viedio in the DOM
 
-const fetchTrailer = (movieId) => {
-  const TRAILER_URL = constructUrl(`movie/${movieId}/videos`);
-  fetch(TRAILER_URL)
-    .then((response) => response.json())
-    .then((data) => {
+const fetchTrailer = async (movieId) => {
+  // Construct the URL for the API endpoint
+  const url = constructUrl(`movie/${movieId}/videos`);
+  // Fetch the response from the API
+  const res = await fetch(url);
+  // Return the JSON data from the response
+  return res.json();
+};
+
+const trailerRun = async (movieId) => {
+  
+  const trailer = await fetchTrailer(movieId)
+    
+  renderTrailer(trailer)
+  
+  };
+
+
+const renderTrailer = (data) => {
+  
       if (data.results.length) {
         const trailerKey = data.results[0].key;
         const trailerEmbedUrl = `https://www.youtube.com/embed/${trailerKey}`;
@@ -249,17 +292,28 @@ const fetchTrailer = (movieId) => {
       } else {
         console.error("No trailer found");
       }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
+    }
+//--------------------------------------------------------------------------------------
 //Renders the Get a list of similar movies. This is not the same as the "Recommendation" system you see on the website. in the DOM
-const fetchRelatedMovies = (movieId) => {
-  const RELATED_MOVIES_URL = constructUrl(`movie/${movieId}/similar`);
-  fetch(RELATED_MOVIES_URL)
-    .then((response) => response.json())
-    .then((data) => {
+
+const fetchRelatedMovies = async (movieId) => {
+  // Construct the URL for the API endpoint
+  const url = constructUrl(`movie/${movieId}/similar`);
+  // Fetch the response from the API
+  const res = await fetch(url);
+  // Return the JSON data from the response
+  return res.json();
+};
+
+const RelatedMoviesRun = async (movieId) => {
+  
+  const trailer = await fetchRelatedMovies (movieId)
+    
+  renderRelatedMovies(trailer)
+  
+  };
+const renderRelatedMovies = (data) => {
+  
       if (Array.isArray(data.results)) {
         const relatedMovies = data.results.slice(0, 5).map((movie) => {
           const movieDiv = document.createElement("div");
@@ -286,11 +340,7 @@ const fetchRelatedMovies = (movieId) => {
       } else {
         console.error("The 'data.results' property is not an array");
       }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
+    }
 //-------------------------------------------------------------------------------------- rawan 
 
 //---- actors List :
