@@ -291,6 +291,94 @@ const fetchRelatedMovies = (movieId) => {
       console.error(error);
     });
 };
+//-------------------------------------------------------------------------------------- rawan 
 
+//---- actors List :
+function renderActors(actors) {
+    
+  actors.map(actor => {
+    const div = document.createElement('div');
+    div.className ="md:w-1/4 p-4";
+    div.innerHTML = `<div class="col-lg-4 col-md-12 col-sm-12">
+    <img src="${
+      PROFILE_BASE_URL + actor.profile_path
+    }" alt="${actor.name} poster"/>
+<div class="bg-zinc-50 border-solid border-2"><h3 class="text-black-400 text-lg font-semibold text-center"> 
+${actor.name} </h3></div></div>`
+div.addEventListener("click", () => {
+  actorDetails(actor);
+ 
+  
+});
+CONTAINER.appendChild(div);
+  });
+}
+const fetchActorsList = async () => {
+  // Construct the URL for the API endpoint
+  const url = constructUrl(`person/popular`);
+  // Fetch the response from the API
+  const res = await fetch(url);
+  // Return the JSON data from the response
+  return res.json();
+};
+
+const actorRun = async () => {
+  
+  const actors = await fetchActorsList()
+    
+   renderActors(actors.results)
+  
+  };
+  
+  const actorItem = document.getElementById('actors')
+  actorItem.addEventListener("click", () => {
+      CONTAINER.innerHTML =''
+      actorRun()
+  });
+
+  //--- single actor :
+
+  const actorDetails = async (actor) => {
+    // Fetch the details of the movie
+    const actorItem = await fetchactor(actor.id);
+    // Render the details of the movie on the page
+    renderActor(actorItem);
+};
+
+const fetchactor = async (actorId) => {
+    // Construct the URL for the API endpoint using the movie's ID
+    const url = constructUrl(`person/${actorId}`);
+    // Fetch the response from the API
+    const res = await fetch(url);
+    // Return the JSON data from the response
+    return res.json();
+};
+/**
+ * 
+ * @param {Object} actor
+ */
+const renderActor = (actor) => {
+    CONTAINER.innerHTML =`
+    <div class="row " id="single-actor-page">
+           <div class="col-lg-4 col-md-12 col-sm-12">
+             <img id="actor-backdrop" src=${PROFILE_BASE_URL + actor.profile_path}> 
+           </div>
+           <div class="col-lg-8 col-md-12 col-sm-12">
+             <h2 id="actor-name"><span>${actor.name}</span></h2>
+             <h4>Gender:</h4>
+             <p id="gender">${actor.gender}</p>
+             <h4>Popularity:</h4>
+             <p id="popularity">${actor.popularity}</p>
+             <h4>Birthday:</h4>
+             <p id="birthday">${actor.birthday}</p>
+             ${actor.deathday}
+             <h4>Biography:</h4>
+              <p id="biography" style="color:#BDBDBD; font-size: .8rem;">${actor.biography}</p>
+           </div>
+        
+         </div>  
+       `;
+};
+//--------------------------------------------------------------------------------------
 // Add an event listener to the DOM to call the autoRun function when the DOM is loaded
 document.addEventListener("DOMContentLoaded", autoRun);
