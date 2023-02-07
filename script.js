@@ -164,7 +164,7 @@ const renderMovie = (movie) => {
 };
 
 // Renders the Actor details in the DOM
-
+// 
 const fetchActors = (movieId) => {
   const ACTORS_URL = constructUrl(`movie/${movieId}/credits`);
   fetch(ACTORS_URL)
