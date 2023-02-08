@@ -225,6 +225,7 @@ const fetchActors = (movieId) => {
                
               </div>
             </li>
+            
           `;
                 });
                 document.querySelector("#actors").innerHTML = actors.join("");
@@ -237,6 +238,7 @@ const fetchActors = (movieId) => {
         });
 };
 
+//--------------------------------------------------------------------------------------
 // Renders the Director job in the DOM
 
 const fetchDirector = (movieId) => {
