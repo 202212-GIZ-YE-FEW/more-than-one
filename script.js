@@ -3,7 +3,7 @@
 // Constants for the base URLs of The Movie Database API and images
 const TMDB_BASE_URL = "https://api.themoviedb.org/3"; // API base URL
 const PROFILE_BASE_URL = "http://image.tmdb.org/t/p/w185"; // Actor/Actress profile image URL
-const BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w780"; // Movie backdrop image URL
+const BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w1280"; // Movie backdrop image URL
 const POSTER_BASE_URL = "http://image.tmdb.org/t/p/w500/";
 // const CONTAINER = document.querySelector(".container"); // Container for displaying movie data
 const CONTAINER = document.querySelector(".movies-container"); // Container for displaying movie data
@@ -46,6 +46,26 @@ const fetchMovies = async () => {
     return res.json();
 };
 
+const fetchFilteredMovies = async (filterOption) => {
+    const url = constructUrl(`movie/${filterOption}`);
+    const res = await fetch(url);
+    return res.json();
+};
+
+const fetchMovieReleaseDates = async (movieId) => {
+    const url = constructUrl(`movie/${movieId}/release_dates`);
+    const res = await fetch(url);
+    return res.json();
+};
+
+const sortMoviesByReleaseDate = (movies) => {
+    return movies.sort((a, b) => {
+        const releaseDateA = fetchMovieReleaseDates(a.id);
+        const releaseDateB = fetchMovieReleaseDates(b.id);
+        return new Date(releaseDateA) - new Date(releaseDateB);
+    });
+};
+
 // ! Don't touch this function please. This function is to fetch one movie.
 // Function to fetch the details of a movie
 const fetchMovie = async (movieId) => {
@@ -57,28 +77,48 @@ const fetchMovie = async (movieId) => {
     return res.json();
 };
 
+// // movieDiv.className = "movie-item w-full md:w-1/3 p-4";
+//         movieDiv.innerHTML = `<img src="${
+//             BACKDROP_BASE_URL + movie.backdrop_path
+//         }" alt="${movie.title} poster"> <div class="mt-2">
+//     <h3 class="text-gray-400 text-lg font-semibold">
+//     ${movie.title}
+//     </h3>
+//     <div class="text-gray-600 text-sm">
+//         <span>${movie.top_rated}</span>
+//         <span class="ml-2"
+//             >Genres: Action, Adventure, Sci-Fi</span
+//         >
+//     </div>
+// </div>
+
 // * You'll need to play with this function in order to add features and enhance the style.
 // Function to render the list of currently playing movies on the page
-const renderMovies = (movies) => {
+const renderMovies = (movies) => {if (!movies || !Array.isArray(movies)) {
+        return;
+    }
     // Loop through each movie in the list
     movies.map((movie) => {
         // Create a div for the movie
-        const movieDiv = document.createElement("div");
+        const movieDiv = document.createElement("a");
         // Set the inner HTML of the div to display the movie's poster and title
-        movieDiv.className = "movie-item w-full md:w-1/3 p-4";
-        movieDiv.innerHTML = `<img src="${
-            BACKDROP_BASE_URL + movie.backdrop_path
-        }" alt="${movie.title} poster"> <div class="mt-2">
-    <h3 class="text-gray-400 text-lg font-semibold">
-    ${movie.title}
-    </h3>
-    <div class="text-gray-600 text-sm">
-        <span>${movie.top_rated}</span>
-        <span class="ml-2"
-            >Genres: Action, Adventure, Sci-Fi</span
-        >
-    </div>
-</div>`;
+        movieDiv.innerHTML = `
+                <div
+                    class="relative overflow-hidden transition duration-200 transform rounded shadow-lg hover:-translate-y-2 hover:shadow-2xl">
+                    <img class="object-cover"
+                        src="${BACKDROP_BASE_URL + movie.backdrop_path}"
+                        alt="${movie.title}" style="width:380px; height:520px;"/>
+                    <div
+                        class="absolute inset-0 px-6 py-4 transition-opacity duration-200 bg-black bg-opacity-75 opacity-0 hover:opacity-100">
+                        <p class="mb-4 text-lg font-bold text-gray-100">
+                            ${movie.title}
+                        </p>
+                        <p class="text-sm tracking-wide text-gray-300">
+                            ${movie.overview}
+                        </p>
+                    </div>
+                </div>
+`;
         // Add a click event listener to the div to display the movie's details when clicked
         movieDiv.addEventListener("click", () => {
             movieDetails(movie);
@@ -96,47 +136,47 @@ const renderMovies = (movies) => {
 //
 
 const renderMovie = (movie) => {
-  const backdropBaseUrl = "https://image.tmdb.org/t/p/w1280";
+    const backdropBaseUrl = "https://image.tmdb.org/t/p/w1280";
 
-  CONTAINER.innerHTML = `
+    CONTAINER.innerHTML = `
       <div class="row"> 
         <div class="col-md-4"> 
           <img id="movie-backdrop" src="${
-            backdropBaseUrl + movie.backdrop_path
+              backdropBaseUrl + movie.backdrop_path
           }"> 
         </div> 
         <div class="col-md-8"> 
           <h2 id="movie-title">${movie.title}</h2>
           <p id="movie-release-date"><b>Release Date:</b> ${
-            movie.release_date
+              movie.release_date
           }</p> 
           <p id="movie-runtime"><b>Runtime:</b> ${movie.runtime} Minutes</p> 
           <h3>Overview:</h3> 
           <p id="movie-overview">${movie.overview}</p> 
           <p id="movie-language"><b>Language:</b> ${
-            movie.original_language
+              movie.original_language
           }</p> 
           <p id="movie-production">
           <b>Production Companies:</b> 
           ${movie.production_companies
-            .map(
-              (productionCompany) =>
-                productionCompany.name +
-                `<img src="${
-                  backdropBaseUrl + productionCompany.logo_path
-                }" width="50">`
-            )
-            .join(", ")}
+              .map(
+                  (productionCompany) =>
+                      productionCompany.name +
+                      `<img src="${
+                          backdropBaseUrl + productionCompany.logo_path
+                      }" width="50">`
+              )
+              .join(", ")}
         </p>
         
        
           <p id="movie-director"><b>Director:
           <p id="vote_average" style="color: ${
-            movie.vote_average > 7
-              ? 'yellow'
-              : movie.vote_average > 5
-              ? 'orange'
-              : 'red'
+              movie.vote_average > 7
+                  ? "yellow"
+                  : movie.vote_average > 5
+                  ? "orange"
+                  : "red"
           };">${movie.vote_average}</p>
           
           
@@ -156,28 +196,28 @@ const renderMovie = (movie) => {
       <div id="related-movies"> 
       </div>
     `;
-  // console.log(movie);
-  fetchActors(movie.id);
-  fetchDirector(movie.id);
-  fetchTrailer(movie.id);
-  fetchRelatedMovies(movie.id);
+    // console.log(movie);
+    fetchActors(movie.id);
+    fetchDirector(movie.id);
+    fetchTrailer(movie.id);
+    fetchRelatedMovies(movie.id);
 };
 
 // Renders the Actor details in the DOM
 
 const fetchActors = (movieId) => {
-  const ACTORS_URL = constructUrl(`movie/${movieId}/credits`);
-  fetch(ACTORS_URL)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      if (Array.isArray(data.cast)) {
-        const actors = data.cast.slice(0, 5).map((actor) => {
-          console.log(actor);
-          return `
+    const ACTORS_URL = constructUrl(`movie/${movieId}/credits`);
+    fetch(ACTORS_URL)
+        .then((response) => response.json())
+        .then((data) => {
+            // console.log(data);
+            if (Array.isArray(data.cast)) {
+                const actors = data.cast.slice(0, 5).map((actor) => {
+                    // console.log(actor);
+                    return `
             <li class=" list-unstyled media my-3">
               <img src="${
-                PROFILE_BASE_URL + actor.profile_path
+                  PROFILE_BASE_URL + actor.profile_path
               }" alt="" class="mr-3" width="120">
               <div class="media-body">
                 <h5 class="mt-0 mb-1">${actor.name}</h5>
@@ -186,57 +226,60 @@ const fetchActors = (movieId) => {
               </div>
             </li>
           `;
+                });
+                document.querySelector("#actors").innerHTML = actors.join("");
+            } else {
+                console.error("The 'data.cast' property is not an array");
+            }
+        })
+        .catch((error) => {
+            console.error(error);
         });
-        document.querySelector("#actors").innerHTML = actors.join("");
-      } else {
-        console.error("The 'data.cast' property is not an array");
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
 };
 
 // Renders the Director job in the DOM
 
 const fetchDirector = (movieId) => {
-  const CREDITS_URL = constructUrl(`movie/${movieId}/credits`);
-  fetch(CREDITS_URL)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      if (Array.isArray(data.crew)) {
-        const director = data.crew.find((member) => member.job === "Director");
-        if (director) {
-          document.querySelector("#movie-director").innerHTML = `
+    const CREDITS_URL = constructUrl(`movie/${movieId}/credits`);
+    fetch(CREDITS_URL)
+        .then((response) => response.json())
+        .then((data) => {
+            // console.log(data);
+            if (Array.isArray(data.crew)) {
+                const director = data.crew.find(
+                    (member) => member.job === "Director"
+                );
+                if (director) {
+                    document.querySelector("#movie-director").innerHTML = `
             <p class="media my-3">
               Director: ${director.name}
             </p>
           `;
-        } else {
-          console.error("No director found for this movie");
-        }
-      } else {
-        console.error("The 'data.crew' property is not an array");
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+                } else {
+                    console.error("No director found for this movie");
+                }
+            } else {
+                console.error("The 'data.crew' property is not an array");
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 };
 
 // Renders the Trailer viedio in the DOM
 
 const fetchTrailer = (movieId) => {
-  const TRAILER_URL = constructUrl(`movie/${movieId}/videos`);
-  fetch(TRAILER_URL)
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.results.length) {
-        const trailerKey = data.results[0].key;
-        const trailerEmbedUrl = `https://www.youtube.com/embed/${trailerKey}`;
-        const trailerContainer = document.querySelector("#trailer-container");
-        trailerContainer.innerHTML = `
+    const TRAILER_URL = constructUrl(`movie/${movieId}/videos`);
+    fetch(TRAILER_URL)
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.results.length) {
+                const trailerKey = data.results[0].key;
+                const trailerEmbedUrl = `https://www.youtube.com/embed/${trailerKey}`;
+                const trailerContainer =
+                    document.querySelector("#trailer-container");
+                trailerContainer.innerHTML = `
           <iframe
             width="560"
             height="315"
@@ -246,51 +289,100 @@ const fetchTrailer = (movieId) => {
             allowfullscreen
           ></iframe>
         `;
-      } else {
-        console.error("No trailer found");
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+            } else {
+                console.error("No trailer found");
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 };
 //Renders the Get a list of similar movies. This is not the same as the "Recommendation" system you see on the website. in the DOM
 const fetchRelatedMovies = (movieId) => {
-  const RELATED_MOVIES_URL = constructUrl(`movie/${movieId}/similar`);
-  fetch(RELATED_MOVIES_URL)
-    .then((response) => response.json())
-    .then((data) => {
-      if (Array.isArray(data.results)) {
-        const relatedMovies = data.results.slice(0, 5).map((movie) => {
-          const movieDiv = document.createElement("div");
-          // Set the inner HTML of the div to display the movie's poster and title
-          movieDiv.innerHTML = `<div class="col-sm-6 col-md-4 col-lg-3 my-3">
+    const RELATED_MOVIES_URL = constructUrl(`movie/${movieId}/similar`);
+    fetch(RELATED_MOVIES_URL)
+        .then((response) => response.json())
+        .then((data) => {
+            if (Array.isArray(data.results)) {
+                const relatedMovies = data.results.slice(0, 5).map((movie) => {
+                    const movieDiv = document.createElement("div");
+                    // Set the inner HTML of the div to display the movie's poster and title
+                    movieDiv.innerHTML = `<div class="col-sm-6 col-md-4 col-lg-3 my-3">
     <div class="card">
     <img src="${BACKDROP_BASE_URL + movie.poster_path}" alt="${
-            movie.title
-          } poster" class="card-img-top">  
+                        movie.title
+                    } poster" class="card-img-top">  
     <div class="card-body">
     <h3 class="card-title">${movie.title}</h3>
     </div>
                </div>
             </div>`;
-          // Add a click event listener to the div to display the movie's details when clicked
-          movieDiv.addEventListener("click", () => {
-            movieDetails(movie);
-          });
-          // Append the movie div to the container element
-          CONTAINER.appendChild(movieDiv);
+                    // Add a click event listener to the div to display the movie's details when clicked
+                    movieDiv.addEventListener("click", () => {
+                        movieDetails(movie);
+                    });
+                    // Append the movie div to the container element
+                    CONTAINER.appendChild(movieDiv);
+                });
+                document.querySelector("#related-movies").innerHTML =
+                    relatedMovies.join("");
+            } else {
+                console.error("The 'data.results' property is not an array");
+            }
+        })
+        .catch((error) => {
+            console.error(error);
         });
-        document.querySelector("#related-movies").innerHTML =
-          relatedMovies.join("");
-      } else {
-        console.error("The 'data.results' property is not an array");
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
 };
+
+const form = document.getElementById("form");
+const search = document.getElementById("search");
+
+form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const searchTerm = search.value;
+    console.log(searchTerm);
+    if (searchTerm && searchTerm !== "") {
+        const searchResults = constructUrl(`search/movie/`) + `&query=${searchTerm}`;
+CONTAINER.innerHTML = "";
+
+        try {
+            const response = await fetch(searchResults);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            const movies = data.results;
+            console.log(movies);
+            renderMovies(movies);
+        } catch (error) {
+            console.error(error);
+            alert("An error occurred while searching for movies. Please try again later.");
+        }
+    }
+});
+
+document
+    .querySelector("#filter-movies")
+    .addEventListener("change", async function handleFilterOptionChange(event) {
+        
+        const selectedOption = event.target.value;
+        if (selectedOption === "") return;
+CONTAINER.innerHTML = "";
+        try {
+            const movies = await fetchFilteredMovies(selectedOption);
+            if (selectedOption === "upcoming") {
+                movies.results.sort(
+                    (a, b) =>
+                        new Date(b.upcoming) - new Date(a.upcoming)
+                );
+            }
+            renderMovies(movies.results);
+        } catch (error) {
+            console.error(error);
+        }
+    });
 
 // Add an event listener to the DOM to call the autoRun function when the DOM is loaded
 document.addEventListener("DOMContentLoaded", autoRun);
