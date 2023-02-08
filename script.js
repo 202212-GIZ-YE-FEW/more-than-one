@@ -103,6 +103,8 @@ const renderMovie = (movie) => {
             <ul id="actors" class="list-unstyled"></ul>
     </div>`;
 };
-
+const icons = document.getElementsByClassName("icons").onclick =function() {
+  window.location.href = 'https://twitter.com/';
+}
 // Add an event listener to the DOM to call the autoRun function when the DOM is loaded
 document.addEventListener("DOMContentLoaded", autoRun);

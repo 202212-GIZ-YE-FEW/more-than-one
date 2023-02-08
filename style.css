@@ -9,3 +9,43 @@
 #actors {
     margin: 24px 16px 0 0;
 }
+
+.card{
+    transition: 0.1s;
+    cursor:pointer;
+   
+}
+.card:hover{
+    box-shadow: 0 1px 50px rgb(141, 144, 159);
+}
+
+.fott{
+    transition: 0.5s;
+    cursor:pointer;
+}
+.fott:hover{
+   color: rgb(41, 37, 37);
+}
+.Abt{
+    background-image: linear-gradient(to left, white,black,white,black,white,black,white);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-animation 13s linear infinite;
+}
+
+
+@keyframes gradient-animation {
+    from{background-position: 400px;}
+    to{background-position: -500px;} 
+    
+}
+  
+  /* -- ↓ ↓ ↓ some responsiveness ↓ ↓ ↓ -- */
+  
+  @media(max-width: 1000px) {
+    body {
+      align-items: flex-start;  
+      overflow: auto;
+    }
+    
