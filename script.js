@@ -386,5 +386,107 @@ CONTAINER.innerHTML = "";
         }
     });
 
+//-----------------------------------------------------------------------------------------
+
+    
+//---- actors List :
+function renderActors(actors) {
+    
+    actors.map(actor => {
+      const div = document.createElement('div');
+      div.className ="md:w-1/4 p-4";
+      div.innerHTML = `<div class="col-lg-4 col-md-12 col-sm-12">
+      <img src="${
+        PROFILE_BASE_URL + actor.profile_path
+      }" alt="${actor.name} poster"/>
+  <div class="bg-zinc-50 border-solid border-2"><h3 class="text-black-400 text-lg font-semibold text-center"> 
+  ${actor.name} </h3></div></div>`
+  div.addEventListener("click", () => {
+    actorDetails(actor);
+   
+    
+  });
+  CONTAINER.appendChild(div);
+    });
+  }
+  const fetchActorsList = async () => {
+    // Construct the URL for the API endpoint
+    const url = constructUrl(`person/popular`);
+    // Fetch the response from the API
+    const res = await fetch(url);
+    // Return the JSON data from the response
+    return res.json();
+  };
+  
+  const actorRun = async () => {
+    
+    const actors = await fetchActorsList()
+      
+     renderActors(actors.results)
+    
+    };
+    
+    const actorItem = document.getElementById('actors')
+    actorItem.addEventListener("click", () => {
+        CONTAINER.innerHTML =''
+        actorRun()
+    });
+  
+    //--- single actor :
+  
+    const actorDetails = async (actor) => {
+      // Fetch the details of the movie
+      const actorItem = await fetchactor(actor.id);
+      // Render the details of the movie on the page
+      renderActor(actorItem);
+  };
+  
+  const fetchactor = async (actorId) => {
+      // Construct the URL for the API endpoint using the movie's ID
+      const url = constructUrl(`person/${actorId}`);
+      // Fetch the response from the API
+      const res = await fetch(url);
+      // Return the JSON data from the response
+      return res.json();
+  };
+  /**
+   * 
+   * @param {Object} actor
+   */
+    
+  const renderActor = (actor) => {
+      CONTAINER.innerHTML =`
+      <div class="m-8 grid grid-row-3 grid-flow-col gap-12">
+      <div class="col-lg-4 col-md-12 col-sm-12">
+        <img id="actor-backdrop" src=${PROFILE_BASE_URL + actor.profile_path}> 
+        <h1 id="actor-name" class="bg-zinc-50 border-solid border-2"><h3 class="text-black-400 text-lg font-semibold text-center"><span>${actor.name}</span></h2>
+      </div>
+      <div class="col-lg-8 col-md-12 col-sm-12">
+       
+        <h2 class="bg-gray-900 text-opacity-100 text-white text-center">Gender</h2>
+        <p class="font-bold m-2">${checkGender(actor.gender)}</p>
+        <h2 class="bg-gray-900 text-opacity-100 text-white text-center">Popularity</h2>
+        <p class="font-bold m-2">${actor.popularity}</p>
+        <h2 class="bg-gray-900 text-opacity-100 text-white text-center">Birthday</h2>
+        <p class="font-bold m-2">${actor.birthday}</p>
+      
+        <h2 class="bg-gray-900 text-opacity-100 text-white text-center">Biography</h2>
+        
+         <p class="font-bold m-2" >${actor.biography}</p>
+      </div>
+      
+      </div>
+         `;
+  };
+  
+  function checkGender(gender){
+    if(gender === 1){
+      return 'Femal'
+    }
+    else{
+      return 'Male'
+    }
+  }
+
 // Add an event listener to the DOM to call the autoRun function when the DOM is loaded
 document.addEventListener("DOMContentLoaded", autoRun);
