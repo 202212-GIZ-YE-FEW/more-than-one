@@ -1,7 +1,25 @@
-* {
+
+
+ @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap');
+
+
+
+
+*{
     box-sizing: border-box;
 }
-
+.font {
+    font-family: 'Dancing Script', cursive;
+    transition: 0.3s ease-in-out;
+   
+  }
+  
+  .font:hover {
+    transform: scale(1.5); /* Change the scale to your desired value */
+    color:bisque;
+ 
+  }
+  
 /* #movie-backdrop {
     width: 100%;
 }
