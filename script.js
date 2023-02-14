@@ -139,24 +139,24 @@ const renderMovies = (movies) => {if (!movies || !Array.isArray(movies)) {
 
 const renderMovie = (movie) => {
   const backdropBaseUrl = "https://image.tmdb.org/t/p/w1280";
-
+  const moviesContainer = document.querySelector(".grid");
+  moviesContainer.classList.remove("grid");
+  
 CONTAINER.innerHTML = `
-<section class="text-gray-400 bg-gray-900 body-font overflow-hidden">
-<div class="container px-5 py-24 mx-auto">
-  <div class="lg:w-4/3 mx-auto flex flex-wrap">
-  <img id="movie-backdrop" class="lg:h-48 md:h-36 w-full object-cover object-center" src="${
+<section class="text-gray-400 bg-gray-900 body-font overflow-hidden ">
+<div class="container px-5 py-5 mx-auto ">
+  <div class="lg:w-4/3 mx-auto flex flex-wrap items-center">
+  <img id="movie-backdrop" class="lg:h-48 md:h-36 w-full object-cover object-center transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110 hover:grayscale hover:opacity-75" src="${
     backdropBaseUrl + movie.backdrop_path
   }">
-    <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+    <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 ">
       <h2 class="text-sm title-font text-gray-500 tracking-widest">Movie NAME</h2>
-      <h1 class="text-white text-3xl title-font font-medium mb-1">${
+      <h1 class="text-white text-3xl title-font font-medium mb-1 text-center items-center">${
         movie.title
       }</h1>
       <div class="flex flex-col space-y-2">
       <div>${movie.release_date}</div>
       <div class="flex space-x-2">
-
-
 
       ${movie.genres
         .map(
@@ -176,7 +176,6 @@ CONTAINER.innerHTML = `
             ? "orange"
             : "red"
         };>
-
           <span class="ml-3">${movie.vote_average}</span>
         </span>
         <span class="flex ml-3 pl-3 py-2 border-l-2 border-gray-800 text-gray-500 space-x-2">
@@ -187,13 +186,10 @@ CONTAINER.innerHTML = `
       <div class="flex mt-6 items-center pb-5 border-b-2 border-gray-800 mb-5">
         <div class="flex">
           <span class="mr-3" id="movie-director">Director:</span>
-
         </div>
         <div class="flex ml-6 items-center">
           <span class="mr-3">Language:</span>${movie.original_language}
           <div class="relative">
-
-
           </div>
         </div>
       </div>
@@ -213,30 +209,21 @@ CONTAINER.innerHTML = `
 </div>
 </section>
 <section class="text-gray-400 bg-gray-900 body-font">
-
-<div class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
-<div class="mx-auto mb-10 lg:max-w-xl sm:text-center">
-  <p class="inline-block px-3 py-px mb-4 text-xs font-semibold tracking-wider  uppercase rounded-full bg-teal-accent-400">
-Company production
-  </p>
-
-</div>
-<div class="grid gap-10 mx-auto sm:grid-cols-2 lg:grid-cols-4 lg:max-w-screen-lg">
+<div class="px-4 py-3 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
+<h1 class="text-2xl font-bold font mb-4 text-white">Company production </h1>
+<div class="grid gap-10 mx-auto sm:grid-cols-5 lg:grid-cols-5 lg:max-w-screen-lg">
   <div>
-    <div class="relative pb-30 mb-4 rounded shadow lg:pb-64">
-    ${movie.production_companies.map(
+    <div class="relative pb-5 mb-4 rounded shadow lg:pb-5">
+    ${movie.production_companies.slice(0, 2).map(
       (productionCompany) =>
         `
-               <img class="absolute object-cover w-full h-full rounded" src="${
+               <img class="lg:h-48 md:h-36 w-36 object-cover object-center" src="${
                  backdropBaseUrl + productionCompany.logo_path
                } "
                  alt="company" />` +
-        `
-               </div>
+        ` </div>
                <div class="flex flex-col sm:text-center">
-                 <p class="text-lg font-bold"> ${productionCompany.name}</p>
-
-
+                 <p class="title-font text-lg font-medium text-white mb-3"> ${productionCompany.name}</p>
                </div>
              </div> `
     )}
@@ -247,26 +234,29 @@ Company production
 </div>
 </div>
 </section>
+
  <section id="actors" class=" list-unstyled text-gray-400 bg-gray-900 body-font">
 
+ <div class="container px-5 py-5 mx-auto">
+ 
+   </div>
  </section>
 <section  id="trailer-container" class="text-gray-400 bg-gray-900 body-font">
 <div class="container px-2 py-10 mx-auto">
-<div class="p-2 md:w-1/2 mx-auto">
-<div class="embed-responsive embed-responsive-16by9 relative w-full overflow-hidden" style="padding-top: 56.25%">
 
-</div>
-</div>
+
+
 </div>
 </section>
 <section id="related-movies" class="text-gray-400 bg-gray-900 body-font">
+
 </section>`
 
 
 actorsRun(movie.id);
 directorRun(movie.id);
-trailerRun(movie.id);
 RelatedMoviesRun(movie.id);
+ trailerRun(movie.id);
 };
 //________________________________________________________________________________________
 // Renders the Actor details in the DOM
@@ -290,48 +280,26 @@ const actorsRun = async (movieId) => {
 
 const renderActores = (data) => {
   if (Array.isArray(data.cast)) {
-    const actors = data.cast.slice(0, 5).map((actor) => {
+    const actors = data.cast.slice(0, 5).map((actor, index) => {
       console.log(actor);
       return `
-      <section id="actors" class=" list-unstyled text-gray-400 bg-gray-900 body-font">
-
-      <div class="container px-5 py-5 mx-auto">
-      <div class="flex flex-nowrap -m-4">
-        <div class="p-2 md:w-1/4">
-          <div class="h-full border-2 border-gray-800 rounded-lg overflow-hidden">
-            <img class="lg:h-48 md:h-36 w-full object-cover object-center" src="${
-              PROFILE_BASE_URL + actor.profile_path
-            }" alt="blog">
-            <div class="p-6">
-
-              <h1 class="title-font text-lg font-medium text-white mb-3">${
-                actor.character
-              }</h1>
-
-            </div>
-          </div>
+      
+      <div class="p-2 md:w-1/5">
+        <div class="h-full border-2 border-gray-800 rounded-lg overflow-hidden">
+          <img class="lg:h-48 md:h-36 w-full object-cover object-center transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110" src="${PROFILE_BASE_URL + actor.profile_path}" alt="blog">
+          <div class="p-6">
+            <h1 class="title-font text-lg font-medium text-white mb-3">${actor.character}</h1>
+          </div>    
         </div>
-      </div>
-    </div> `;
-
-      // return `
-      //       <li class=" list-unstyled media my-3">
-      //         <img src="${
-      //           PROFILE_BASE_URL + actor.profile_path
-      //         }" alt="" class="mr-3" width="120">
-      //         <div class="media-body">
-      //           <h5 class="mt-0 mb-1">${actor.name}</h5>
-      //           <p>Character: ${actor.character}</p>
-
-      //         </div>
-      //       </li>
-
-      //     `;
+      </div> `;
     });
 
     const actorsList = document.querySelector("#actors");
 
-    actorsList.innerHTML = actors.join("");
+    actorsList.innerHTML = `
+      <h1 class="text-2xl font-bold font mb-4 text-white">Actors</h1>
+      <div class="flex flex-wrap">${actors.join("")}</div>
+    `;
   } else {
     console.error("The 'data.cast' property is not an array");
   }
@@ -400,11 +368,20 @@ const renderTrailer = (data) => {
     const trailerEmbedUrl = `https://www.youtube.com/embed/${trailerKey}`;
     const trailerContainer = document.querySelector("#trailer-container");
     trailerContainer.innerHTML = `
+    <h1 class="text-2xl font-bold font mb-4 text-white">Trailer viedio</h1>
+    <div class="p-2 md:w-1/2 mx-auto">
+<div class="embed-responsive embed-responsive-16by9 relative w-full overflow-hidden" style="padding-top: 56.25%">
 <iframe class="embed-responsive-item absolute top-0 right-0 bottom-0 left-0 w-full h-full" src="${trailerEmbedUrl}"
 allowfullscreen=""
 data-gtm-yt-inspected-2340190_699="true"
 id="240632615"
-></iframe>`;
+></iframe>
+
+</div>
+</div>
+
+
+<h1 class="text-2xl font-bold font my-10 text-white">Related Movies</h1>`;
 
  
   } else {
@@ -431,48 +408,42 @@ id="240632615"
   };
   const renderRelatedMovies = (data) => {
     if (Array.isArray(data.results)) {
-      const relatedMovies = data.results.slice(0, 5).map((movie) => {
-        const movieDiv = document.createElement("div");
-        // Set the inner HTML of the div to display the movie's poster and title
-        movieDiv.innerHTML = `
-        <div class="container px-5 py-10 mx-auto flex flex-wrap">
-        <div class="lg:w-2/3 mx-auto">
-
-          <div class="flex flex-nowrap -mx-8">
-              <div class="px-2">
-                  <div class="flex flex-wrap w-full bg-gray-800 sm:py-24 py-16 sm:px-10 px-6 relative">
-                    <img alt="gallery" class="w-full object-cover h-full object-center block opacity-25 absolute inset-0" src="${BACKDROP_BASE_URL + movie.poster_path}">
-                    <div class="text-center relative z-10 w-full">
-                      <h2 class="text-xl text-white font-medium title-font mb-2">${movie.title}</h2>
-
-
-                        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                          <path d="M5 12h14M12 5l7 7-7 7"></path>
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
+      const relatedMovies = data.results.slice(0, 5);
+      let movieDiv = document.createElement("div");
+      movieDiv.classList.add(
+        "container",
+        "px-5",
+        "py-10",
+        "mx-auto",
+        "flex",
+        "flex-wrap"
+      );
+      movieDiv.innerHTML = `
+       
+        ${relatedMovies
+          .map(
+            (movie) => `
+              <div class="lg:w-1/5 sm:w-1/3 p-2 mx-auto"> 
+                <div class="relative pb-30 mb-10  rounded shadow lg:pb-64">
+                  <img alt="gallery" class="absolute object-cover w-full h-full rounded transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110 hover:grayscale hover:opacity-75" src="${
+                    BACKDROP_BASE_URL + movie.poster_path
+                  }"> 
+                </div> 
+                <div class="flex flex-col sm:text-center"> 
+                  <h2 class="text-xl text-white font-medium title-font mb-20">${movie.title}</h2>
                 </div>
-
-          </div>
-        </div>
-      </div>`;
-
-
-      
-        // Add a click event listener to the div to display the movie's details when clicked
-        movieDiv.addEventListener("click", () => {
-          movieDetails(movie);
-        });
-        // Append the movie div to the container element
-        CONTAINER.appendChild(movieDiv);
-      });
-      document.querySelector("#related-movies").innerHTML =
-        relatedMovies.join("");
+              </div>
+            `
+          )
+          .join("")}
+      `;
+      document.querySelector("#related-movies").innerHTML = "";
+      document.querySelector("#related-movies").appendChild(movieDiv);
     } else {
       console.error("The 'data.results' property is not an array");
     }
   };
+  
   //-------------------------------------------------------------------------------------- rawan
 
 
