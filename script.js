@@ -154,8 +154,8 @@ const renderMovie = (movie) => {
     <img id="movie-backdrop" class="lg:h-48 md:h-36 w-full object-cover object-center transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110 hover:grayscale hover:opacity-75" src="${
       backdropBaseUrl + movie.backdrop_path
     }">
-      <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 ">
-        <h2 class="text-sm title-font text-gray-500 tracking-widest">Movie NAME</h2>
+      <div class="lg:w-1/1 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 mx-auto">
+        <h2 class="text-sm title-font text-gray-500 tracking-widest text-center">Movie NAME</h2>
         <h1 class="text-white text-3xl title-font font-medium mb-1 text-center items-center">${
           movie.title
         }</h1>
@@ -411,14 +411,14 @@ const renderRelatedMovies = (data) => {
         ${relatedMovies
           .map(
             (movie) => `
-              <div class="lg:w-1/5 sm:w-1/3 p-2 mx-auto"> 
+              <div class="lg:w-1/5 sm:w-1/3 p-2 mx-auto "> 
                 <div class="relative pb-30 mb-10  rounded shadow lg:pb-64">
                   <img alt="gallery" class="absolute object-cover w-full h-full rounded transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110 hover:grayscale hover:opacity-75" src="${
                     BACKDROP_BASE_URL + movie.poster_path
                   }"> 
                 </div> 
-                <div class="flex flex-col sm:text-center"> 
-                  <h2 class="text-xl text-white font-medium title-font mb-20">${
+                <div class="flex flex-col sm:text-center text-center"> 
+                  <h2 class="text-xl text-white font-medium title-font text-center  mb-20">${
                     movie.title
                   }</h2>
                 </div>
@@ -553,22 +553,22 @@ const renderActor = (actor) => {
                 <img id="actor-backdrop" src=${
                   PROFILE_BASE_URL + actor.profile_path
                 }> 
-                <h1 id="actor-name" class="bg-zinc-50 border-solid border-2"><h3 class="text-gray-100 text-lg font-semibold text-center"><span>${
+                <h1 id="actor-name" class="bg-zinc-50 border-solid border-2"><h3 class="text-gray-100 text-violet-300 text-lg font-semibold "><span>${
                   actor.name
                 }</span></h2>
             </div>
             <div class="col-lg-8 col-md-12 col-sm-12">
 
-                <h2 class="bg-gray-900 text-opacity-100 text-gray-100 text-center">Gender</h2>
-                <p class="font-bold m-2">${checkGender(actor.gender)}</p>
-                <h2 class="bg-gray-900 text-opacity-100 text-gray-100 text-center">Popularity</h2>
-                <p class="font-bold m-2">${actor.popularity}</p>
-                <h2 class="bg-gray-900 text-opacity-100 text-gray-100 text-center">Birthday</h2>
-                <p class="font-bold m-2">${actor.birthday}</p>
+                <h2 class="bg-gray-900 text-opacity-100 text-gray-100 ">Gender</h2>
+                <p class="font-bold m-2 text-violet-300">${checkGender(actor.gender)}</p>
+                <h2 class="bg-gray-900 text-opacity-100 text-gray-100 ">Popularity</h2>
+                <p class="font-bold m-2 text-violet-300">${actor.popularity}</p>
+                <h2 class="bg-gray-900 text-opacity-100 text-gray-100 ">Birthday</h2>
+                <p class="font-bold m-2 text-violet-300">${actor.birthday}</p>
                 
-                <h2 class="bg-gray-900 text-opacity-100 text-gray-100 text-center">Biography</h2>
+                <h2 class="bg-gray-900 text-opacity-100 text-gray-100 ">Biography</h2>
                 
-                <p class="font-bold m-2" >${actor.biography}</p>
+                <p class="font-bold m-2 text-violet-300" >${actor.biography}</p>
             </div>
         
         </div>
