@@ -574,6 +574,35 @@ const renderActor = (actor) => {
         </div>
            `;
 };
+// About 
+
+
+const about = document.getElementById("about");
+
+function aboutRun() {
+  const moviesContainer = document.querySelector(".grid");
+  moviesContainer.classList.remove("grid");
+ 
+  const aboutSection = `
+  <div class="md:bg-gray-900 bg-auto py-6 sm:py-8 lg:py-12 max-w-screen-2xl px-4 md:px-8 mx-auto">
+  <div class="md:bg-gray-800 rounded-2xl px-4 py-6 md:py-8 lg:py-12 ">
+    <h2 class="text-gray-300 text-2xl lg:text-3xl font-bold text-center mb-4 md:mb-6  Abt">About us</h2>
+    <p class="max-w-screen-md text-gray-400 capitalize md:text-lg text-center mx-auto fott">Our platform is one of the largest global platforms that collect international movies</p> 
+    <p class="max-w-screen-md text-gray-500  md:text-lg text-center mx-auto fott"> This is a movie database project, where it shows movies, their casts, ratings, trailers, related movies, genres, and so on.
+
+    This project uses The Movie DB API: https://api.themoviedb.org/3. It is up to you to use your Google and Postman skills to explore the API and understand the data.
+    
+    </p>
+  </div>
+  `;
+  
+  
+  CONTAINER.innerHTML = aboutSection;
+}
+
+about.addEventListener("click", () => {
+  aboutRun();
+});
 
 function checkGender(gender) {
   if (gender === 1) {
